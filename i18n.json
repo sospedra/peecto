@@ -1,9 +1,7 @@
 {
-  "allLanguages": ["en", "ca"],
+  "allLanguages": ["en", "es"],
   "defaultLanguage": "en",
   "currentPagesDir": "_pages",
-  "finalPagesDir": "pages",
-  "localesPath": "locales",
   "pages": {
     "*": ["common"],
     "/": ["home"]

@@ -2,28 +2,28 @@ import React from 'react'
 import Head from 'next/head'
 import useTranslation from 'next-translate/useTranslation'
 
-export default function Layout(props) {
+const Layout: React.FC<{}> = (props) => {
   const { t } = useTranslation()
 
   return (
-    <div className="container">
+    <div className='container'>
       <Head>
         <title>{t('common:title')}</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       {props.children}
 
       <footer>
         <span>{t('common:powered')} </span>
-        <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">
+        <a href='https://vercel.com' target='_blank' rel='noopener noreferrer'>
           ▲ vercel
         </a>
         <span>&amp;</span>
         <a
-          href="https://github.com/vinissimus/next-translate"
-          target="_blank"
-          rel="noopener noreferrer"
+          href='https://github.com/vinissimus/next-translate'
+          target='_blank'
+          rel='noopener noreferrer'
         >
           next-translate
         </a>
@@ -91,3 +91,5 @@ export default function Layout(props) {
     </div>
   )
 }
+
+export default Layout
