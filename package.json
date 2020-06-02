@@ -1,15 +1,17 @@
 {
   "name": "with-next-translate",
   "scripts": {
-    "dev": "next-translate && next dev",
+    "signal": "peerjs --port 9000 --key peecto --path /handshake",
+    "dev": "yarn signal & next-translate && next dev",
     "build": "next-translate && next build",
-    "start": "next start"
+    "start": "yarn signal & next start"
   },
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
     "next": "9.4.4",
     "next-translate": "^0.17.0",
+    "peer": "^0.5.3",
     "peerjs": "^1.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
