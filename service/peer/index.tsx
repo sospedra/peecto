@@ -31,11 +31,12 @@ const PeerProvider: React.FC<{ roomID: string }> = (props) => {
   }
 
   useEffect(() => {
+    const { hostname, protocol, port } = location
     const peer = new Peer(Vault.isHost ? props.roomID : null, {
-      host: 'localhost',
-      port: 9000,
-      key: 'peecto',
+      host: hostname,
+      port: port ? Number(port) : protocol === 'https:' ? 443 : 80,
       path: '/handshake',
+      key: 'peecto',
     })
 
     peer.on('open', (id) => {

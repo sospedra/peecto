@@ -1,5 +1,7 @@
 import next from 'next'
 import express from 'express'
+import http from 'http'
+import { ExpressPeerServer } from 'peer'
 
 const port = parseInt(process.env.PORT || '3000', 10)
 const dev = process.env.NODE_ENV !== 'production'
@@ -7,14 +9,16 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
-  const server = express()
+  const core = express()
+  const server = http.createServer(core).listen(port)
 
-  server.all('*', (req, res) => {
-    return handle(req, res)
-  })
+  core.use(
+    '/handshake',
+    ExpressPeerServer(server, {
+      key: 'peecto',
+      path: '/',
+    }),
+  )
 
-  server.listen(port, (err) => {
-    if (err) throw err
-    console.log(`> Ready on http://localhost:${port}`)
-  })
+  core.all('*', (req, res) => handle(req, res))
 })
