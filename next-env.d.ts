@@ -1,10 +1,15 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
+
 declare module 'next-translate/useTranslation' {
   export default function useTranslation(): {
     t: (key: string, query?: { [name: string]: string | number }) => string
     lang: string
   }
+}
+
+declare module 'next-translate/fixHref' {
+  export default function fixHref(href: string, lang: string): string
 }
 
 declare module 'next-translate/appWithI18n' {
@@ -42,7 +47,7 @@ declare module 'next-translate/Router' {
 }
 
 declare module 'next-translate/Link' {
-  type NextLink = import('next/link')
-  declare const _default: NextLink
+  type LinkProps = import('next/link').LinkProps
+  declare const _default: React.FC<LinkProps>
   export default _default
 }
