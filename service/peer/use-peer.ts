@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react'
 import Peer from 'peerjs'
 import { createLog } from './log'
 import { Room } from './use-room'
+import { ChatAction } from './use-chat'
 
 const log = createLog('use-peer')
 
-export const usePeer = ({ peer, roomID, id, setNodes, chat }: Room) => {
+export const usePeer = ({ peer, roomID, id, chat }: Room) => {
   const [host, setHost] = useState<Peer.DataConnection>()
-  const broadcast = (type: string, payload: JSONObject) => {
-    log('broadcast', type, payload)
-    host.send({ type, payload })
+  const broadcast = (action: ChatAction) => {
+    log('broadcast', action)
+    host.send(action)
   }
 
   useEffect(() => {
@@ -24,12 +25,6 @@ export const usePeer = ({ peer, roomID, id, setNodes, chat }: Room) => {
       host.on('data', (data) => {
         log('Received data', data)
         chat.dispatch(data)
-        switch (data.type) {
-          case 'nodes-update': {
-            log('case', data)
-            setNodes(data.payload.nodes)
-          }
-        }
       })
 
       host.on('close', () => {

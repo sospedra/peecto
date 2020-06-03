@@ -7,16 +7,21 @@ type Message = {
   id: string
 }
 
-export type ChatAction = { type: 'add-message'; payload: Message }
+export type ChatAction =
+  | { type: 'add-message'; payload: Message }
+  | { type: 'update-nodes'; payload: string[] }
 
 const defaultState = {
   messages: [] as Message[],
+  nodes: [] as string[],
 }
 
 const chatReducer = (state: typeof defaultState, action: ChatAction) => {
   switch (action.type) {
     case 'add-message':
       return { ...state, messages: [...state.messages, action.payload] }
+    case 'update-nodes':
+      return { ...state, nodes: action.payload }
     default:
       return state
   }

@@ -16,17 +16,17 @@ const PeerProvider: React.FC<{ roomID: string }> = ({ roomID }) => {
       <p>host: {Vault.isHost.toString()}</p>
       <p>Room:</p>
       <ul>
-        {room.nodes.map((id) => (
+        {room.chat.nodes.map((id) => (
           <li key={id}>{id}</li>
         ))}
       </ul>
-      <button onClick={() => broadcast('message', { content: 'ping' })}>
-        Ping
-      </button>
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          broadcast('add-message', createMessage(room.id, message))
+          broadcast({
+            type: 'add-message',
+            payload: createMessage(room.id, message),
+          })
           setMessage('')
         }}
       >

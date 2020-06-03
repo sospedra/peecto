@@ -10,32 +10,33 @@ export type Room = ReturnType<typeof useRoom>
 
 export const useRoom = (roomID: string) => {
   const [id, setID] = useState<string>()
-  const [nodes, setNodes] = useState<string[]>([])
+  const [peer, setPeer] = useState<Peer>()
   const chat = useChat()
-  const { current: peer } = useRef<Peer>(
-    new Peer(Vault.isHost ? roomID : null, {
+
+  useEffect(() => {
+    const p = new Peer(Vault.isHost ? roomID : null, {
       host: 'peecto-handshake.herokuapp.com',
       port: 443,
       path: '/myapp',
       secure: true,
-    }),
-  )
+    })
 
-  useEffect(() => {
-    peer.on('open', (id) => {
+    p.on('open', (id) => {
       log('Open peer', id)
       setID(id)
     })
-    peer.on('disconnected', () => {
+    p.on('disconnected', () => {
       log('Disconnected peer', id)
-      setTimeout(() => peer.reconnect(), 5000)
+      setTimeout(() => p.reconnect(), 5000)
     })
+
+    setPeer(p)
 
     return () => {
       log('Destroy peer', id)
-      peer.destroy()
+      p.destroy()
     }
   }, [])
 
-  return { peer, id, nodes, setNodes, roomID, chat }
+  return { peer, id, roomID, chat }
 }
