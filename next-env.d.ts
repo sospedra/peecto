@@ -1,6 +1,11 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
 
+declare type JSONPrimitive = string | number | boolean | null
+declare type JSONValue = JSONPrimitive | JSONObject | JSONArray
+declare type JSONObject = { [member: string]: JSONValue }
+declare type JSONArray = JSONValue[]
+
 declare module 'next-translate/useTranslation' {
   export default function useTranslation(): {
     t: (key: string, query?: { [name: string]: string | number }) => string
