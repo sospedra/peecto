@@ -1,3 +1,4 @@
+const noop = () => {}
 const hue = (name: string) => {
   switch (name) {
     case 'use-host':
@@ -10,11 +11,13 @@ const hue = (name: string) => {
 }
 
 export const createLog = (name: string, level = 'log') => {
-  return (...content: JSONValue[]) => {
-    console[level](
-      `%c ${name} ▼`,
-      `color: hsl(${hue(name)}, 66%, 33%)`,
-      ...content,
-    )
-  }
+  return process.env.NODE_ENV === 'production'
+    ? noop
+    : (...content: JSONValue[]) => {
+        console[level](
+          `%c ${name} ▼`,
+          `color: hsl(${hue(name)}, 66%, 33%)`,
+          ...content,
+        )
+      }
 }

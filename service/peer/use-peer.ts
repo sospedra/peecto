@@ -5,7 +5,7 @@ import { Room } from './use-room'
 
 const log = createLog('use-peer')
 
-export const usePeer = ({ peer, roomID, id, setNodes }: Room) => {
+export const usePeer = ({ peer, roomID, id, setNodes, chat }: Room) => {
   const [host, setHost] = useState<Peer.DataConnection>()
   const broadcast = (type: string, payload: JSONObject) => {
     log('broadcast', type, payload)
@@ -23,6 +23,7 @@ export const usePeer = ({ peer, roomID, id, setNodes }: Room) => {
 
       host.on('data', (data) => {
         log('Received data', data)
+        chat.dispatch(data)
         switch (data.type) {
           case 'nodes-update': {
             log('case', data)
