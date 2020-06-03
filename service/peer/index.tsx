@@ -32,10 +32,10 @@ const PeerProvider: React.FC<{ roomID: string }> = (props) => {
 
   useEffect(() => {
     const peer = new Peer(Vault.isHost ? props.roomID : null, {
-      host: 'localhost',
-      port: 9000,
-      key: 'peecto',
-      path: '/handshake',
+      host: 'peecto-handshake.herokuapp.com',
+      port: 443,
+      path: '/myapp',
+      secure: true,
     })
 
     peer.on('open', (id) => {
