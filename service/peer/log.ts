@@ -7,6 +7,8 @@ const hue = (name: string) => {
       return 220
     case 'use-room':
       return 180
+    case 'use-canvas':
+      return 120
   }
 }
 

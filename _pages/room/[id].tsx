@@ -9,8 +9,32 @@ const Room: React.FC<{}> = () => {
 
   return (
     <main>
-      <p>id is {router.query.id}</p>
-      <Peer roomID={`${router.query.id}`} />
+      <Peer roomID={`${router.query.id}`}>
+        {({ room, broadcast }) => {
+          return (
+            <div>
+              <p>Room ID: {room.roomID}</p>
+              <p>Peer ID: {room.id}</p>
+              <p>Nodes:</p>
+              <ul>
+                {room.chat.nodes.map((id) => (
+                  <li key={id}>{id}</li>
+                ))}
+              </ul>
+
+              <canvas ref={room.canvas.ref} {...room.canvas.dimensions} />
+              <p>history {room.canvas.history.length}</p>
+              <button
+                onClick={() => {
+                  broadcast({ type: 'undo' })
+                }}
+              >
+                undo
+              </button>
+            </div>
+          )
+        }}
+      </Peer>
     </main>
   )
 }

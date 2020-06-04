@@ -1,19 +1,21 @@
 import { useEffect } from 'react'
 import { Map } from 'immutable'
 import Peer from 'peerjs'
+import { useStateRef } from 'service/use-state-ref'
 import { createLog } from './log'
 import { Room } from './use-room'
-import { useStateRef } from 'service/use-state-ref'
 import { ChatAction } from './use-chat'
+import { CanvasAction } from './use-canvas'
 
 const log = createLog('use-host')
 type Net = Peer.DataConnection
 
-export const useHost = ({ peer, id, chat }: Room) => {
+export const useHost = ({ peer, id, chat, canvas }: Room) => {
   const [network, setNetwork, networkRef] = useStateRef(Map<Net>({}))
-  const broadcast = (action: ChatAction) => {
+  const broadcast = (action: ChatAction | CanvasAction) => {
     log('Broadcast', action)
-    chat.dispatch(action)
+    chat.dispatch(action as ChatAction)
+    canvas.dispatch(action as CanvasAction)
     networkRef.current.forEach((net) => net.send(action))
   }
 
@@ -59,5 +61,5 @@ export const useHost = ({ peer, id, chat }: Room) => {
     }
   }, [chat.nodes])
 
-  return { broadcast }
+  return { broadcast, isReady: true }
 }
