@@ -102,25 +102,32 @@ export const useCanvas = () => {
   ) => {
     useEffect(() => {
       if (isReady) {
-        console.log('asu')
         const canvas = ref.current
         const context = canvas.getContext('2d')
-        const getMousePosition = (e: MouseEvent) => {
+        const isTouchScreen = window.matchMedia('(hover: none)').matches
+        const events = {
+          start: isTouchScreen ? 'touchstart' : 'mousedown',
+          move: isTouchScreen ? 'touchmove' : 'mousemove',
+          end: isTouchScreen ? 'touchend' : 'mouseup',
+        } as const
+        const getPosition = (e: MouseEvent | TouchEvent) => {
           const { left, top } = canvas.getBoundingClientRect()
-          return { x: e.clientX - left, y: e.clientY - top }
+          const { clientX, clientY } =
+            e instanceof MouseEvent ? e : e.touches[0]
+          return { x: clientX - left, y: clientY - top }
         }
 
         context.fillStyle = state.bg
         context.fillRect(0, 0, state.dimensions.width, state.dimensions.height)
         broadcast({ type: 'save' })
 
-        canvas.addEventListener('mousedown', (e) => {
-          broadcast({ type: 'dragstart', payload: getMousePosition(e) })
+        canvas.addEventListener(events.start, (e) => {
+          broadcast({ type: 'dragstart', payload: getPosition(e) })
         })
-        canvas.addEventListener('mousemove', (e) => {
-          broadcast({ type: 'drag', payload: getMousePosition(e) })
+        canvas.addEventListener(events.move, (e) => {
+          broadcast({ type: 'drag', payload: getPosition(e) })
         })
-        canvas.addEventListener('mouseup', () => {
+        canvas.addEventListener(events.end, () => {
           broadcast({ type: 'dragend' })
         })
       }
