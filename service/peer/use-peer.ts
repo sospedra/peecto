@@ -6,7 +6,7 @@ import { ChatAction } from './use-chat'
 
 const log = createLog('use-peer')
 
-export const usePeer = ({ peer, roomID, id, chat }: Room) => {
+export const usePeer = ({ peer, roomID, id, chat, canvas }: Room) => {
   const [host, setHost] = useState<Peer.DataConnection>()
   const broadcast = (action: ChatAction) => {
     log('broadcast', action)
@@ -25,6 +25,7 @@ export const usePeer = ({ peer, roomID, id, chat }: Room) => {
       host.on('data', (data) => {
         log('Received data', data)
         chat.dispatch(data)
+        canvas.dispatch(data)
       })
 
       host.on('close', () => {
@@ -36,5 +37,5 @@ export const usePeer = ({ peer, roomID, id, chat }: Room) => {
     }
   }, [id])
 
-  return { broadcast }
+  return { broadcast, isReady: !!host }
 }

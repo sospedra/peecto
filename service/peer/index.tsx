@@ -1,50 +1,24 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Vault from './vault'
-import { useRoom } from './use-room'
+import { useRoom, Room } from './use-room'
 import { useHost } from './use-host'
 import { usePeer } from './use-peer'
-import { createMessage } from './use-chat'
+import { useCanvas } from './use-canvas'
 
-const PeerProvider: React.FC<{ roomID: string }> = ({ roomID }) => {
-  const [message, setMessage] = useState('')
-  const room = useRoom(roomID)
-  const { broadcast } = Vault.isHost ? useHost(room) : usePeer(room)
+const PeerProvider: React.FC<{
+  roomID: string
+  children: (opts: {
+    room: Room
+    broadcast: ReturnType<typeof useHost>['broadcast'] &
+      ReturnType<typeof usePeer>['broadcast']
+  }) => React.ReactElement
+}> = (props) => {
+  const room = useRoom(props.roomID)
+  const { broadcast, isReady } = Vault.isHost ? useHost(room) : usePeer(room)
 
-  return (
-    <div>
-      <p>Room ID: {room.roomID}</p>
-      <p>host: {Vault.isHost.toString()}</p>
-      <p>Room:</p>
-      <ul>
-        {room.chat.nodes.map((id) => (
-          <li key={id}>{id}</li>
-        ))}
-      </ul>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          broadcast({
-            type: 'add-message',
-            payload: createMessage(room.id, message),
-          })
-          setMessage('')
-        }}
-      >
-        <p>Messages:</p>
-        <ul>
-          {room.chat.messages.map((message) => (
-            <li key={message.id}>
-              <i>{message.createdAt}</i> [{message.author}]: {message.content}
-            </li>
-          ))}
-        </ul>
-        <input
-          value={message}
-          onChange={(e) => setMessage(e.currentTarget.value)}
-        />
-      </form>
-    </div>
-  )
+  room.canvas.useListeners(broadcast, isReady)
+
+  return props.children({ room, broadcast })
 }
 
 export default PeerProvider

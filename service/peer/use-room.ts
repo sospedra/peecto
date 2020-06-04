@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Peer from 'peerjs'
 import Vault from './vault'
 import { createLog } from './log'
 import { useChat } from './use-chat'
+import { useCanvas } from './use-canvas'
 
 const log = createLog('use-peer')
 
@@ -12,6 +13,7 @@ export const useRoom = (roomID: string) => {
   const [id, setID] = useState<string>()
   const [peer, setPeer] = useState<Peer>()
   const chat = useChat()
+  const canvas = useCanvas()
 
   useEffect(() => {
     const p = new Peer(Vault.isHost ? roomID : null, {
@@ -38,5 +40,5 @@ export const useRoom = (roomID: string) => {
     }
   }, [])
 
-  return { peer, id, roomID, chat }
+  return { peer, id, roomID, chat, canvas }
 }
