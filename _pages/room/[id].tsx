@@ -21,16 +21,47 @@ const Room: React.FC<{}> = () => {
                   <li key={id}>{id}</li>
                 ))}
               </ul>
+              <p>Round: {room.game.round}</p>
+              <p>Turn: {room.game.turn}</p>
+              <p>Scoreboard: {JSON.stringify(room.game.scoreboard)}</p>
 
-              <canvas ref={room.canvas.ref} {...room.canvas.dimensions} />
-              <p>history {room.canvas.history.length}</p>
-              <button
-                onClick={() => {
-                  broadcast({ type: 'undo' })
+              <div
+                style={{
+                  display: room.game.startAt ? 'block' : 'none',
                 }}
               >
-                undo
-              </button>
+                <canvas ref={room.canvas.ref} {...room.canvas.dimensions} />
+                <p>history {room.canvas.history.length}</p>
+                <button
+                  onClick={() => {
+                    broadcast({ type: 'undo' })
+                  }}
+                >
+                  undo
+                </button>
+              </div>
+
+              <div style={{ display: room.game.startAt ? 'none' : 'block' }}>
+                <p>Awaiting to start with {room.chat.nodes.length} players</p>
+                {room.isHost && (
+                  <button
+                    onClick={() => {
+                      broadcast({
+                        type: 'start',
+                        payload: {
+                          master: room.id,
+                          players: room.chat.nodes.map((x) => ({
+                            playerID: x,
+                            display: x,
+                          })),
+                        },
+                      })
+                    }}
+                  >
+                    start
+                  </button>
+                )}
+              </div>
             </div>
           )
         }}

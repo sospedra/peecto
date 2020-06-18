@@ -3,7 +3,6 @@ import Vault from './vault'
 import { useRoom, Room } from './use-room'
 import { useHost } from './use-host'
 import { usePeer } from './use-peer'
-import { useCanvas } from './use-canvas'
 
 const PeerProvider: React.FC<{
   roomID: string

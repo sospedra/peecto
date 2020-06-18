@@ -6,16 +6,18 @@ import { createLog } from './log'
 import { Room } from './use-room'
 import { ChatAction } from './use-chat'
 import { CanvasAction } from './use-canvas'
+import { GameAction } from './use-game'
 
 const log = createLog('use-host')
 type Net = Peer.DataConnection
 
-export const useHost = ({ peer, id, chat, canvas }: Room) => {
+export const useHost = ({ peer, id, chat, canvas, game }: Room) => {
   const [network, setNetwork, networkRef] = useStateRef(Map<Net>({}))
-  const broadcast = (action: ChatAction | CanvasAction) => {
+  const broadcast = (action: ChatAction | CanvasAction | GameAction) => {
     log('Broadcast', action)
     chat.dispatch(action as ChatAction)
     canvas.dispatch(action as CanvasAction)
+    game.dispatch(action as GameAction)
     networkRef.current.forEach((net) => net.send(action))
   }
 
