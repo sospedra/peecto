@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "lz-string": "^1.4.4",
     "next": "9.4.4",
     "next-translate": "^0.17.0",
