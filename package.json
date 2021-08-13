@@ -9,7 +9,7 @@
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
     "lz-string": "^1.4.4",
-    "next": "9.4.4",
+    "next": "11.1.0",
     "next-translate": "^0.17.0",
     "peerjs": "^1.2.0",
     "react": "16.13.1",
